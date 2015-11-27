@@ -24,8 +24,6 @@ function createGetFilesContentFunction(ref) {
     console.error(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`);
     fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`)
       .then(res => {
-        console.error(res);
-        console.error(res.json());
         return res.json();
       });
   };
@@ -38,7 +36,9 @@ app.post('/', ({ headers, body }, res) => {
   if (headers['x-github-event'] !== 'push') return res.status(200).end();
   const { id: ref } = body.head_commit;
   const getFilesContent = createGetFilesContentFunction(ref);
-  const files = getChangedFiles(body.commits, FILES_REGEXP).map(getFilesContent);
+  const files = getChangedFiles(body.commits, FILES_REGEXP).map(file => {
+    return getFilesContent(file).then(c => console.error(c));
+  });
   Promise.all(files).then(fs => console.log(fs));
   return res.status(200).end();
 });
