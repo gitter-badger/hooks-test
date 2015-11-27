@@ -23,7 +23,11 @@ function createGetFilesContentFunction(ref) {
   return filename => {
     console.error(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`);
     fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`)
-      .then(res => res.json());
+      .then(res => {
+        console.error(res);
+        console.error(res.json());
+        return res.json();
+      });
   };
 }
 
