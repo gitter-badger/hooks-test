@@ -6,7 +6,7 @@ app.set('port', (process.env.PORT || 5000));
 
 app.use(bodyParser.json());
 
-app.post('/', req => {
+app.post('/', (req, res) => {
   console.log(req.body);
   res.end();
 });
