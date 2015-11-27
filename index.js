@@ -21,8 +21,7 @@ function getChangedFiles(commits, matchRegex) {
 
 function createGetFilesContentFunction(ref) {
   return filename => {
-    console.error(`/repos/${REPO}/contents/${filename}?ref=${ref}`);
-    fetch(`/repos/${REPO}/contents/${filename}?ref=${ref}`);
+    fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`);
   };
 }
 
