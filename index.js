@@ -21,7 +21,8 @@ function getChangedFiles(commits, matchRegex) {
 
 function createGetFilesContentFunction(ref) {
   return filename => {
-    fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`);
+    fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`)
+      .then(res => res.json());
   };
 }
 
@@ -31,7 +32,6 @@ app.use(bodyParser.json());
 app.post('/', ({ headers, body }, res) => {
   if (headers['x-github-event'] !== 'push') return res.status(200).end();
   const { id: ref } = body.head_commit;
-  console.error(ref);
   const getFilesContent = createGetFilesContentFunction(ref);
   const files = getChangedFiles(body.commits, FILES_REGEXP).map(getFilesContent);
   Promise.all(files).then(fs => console.log(fs));

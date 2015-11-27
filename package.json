@@ -27,7 +27,7 @@
     "start": "node --es_staging --harmony_destructuring --harmony_default_parameters index.js"
   },
   "engines": {
-    "node": "5.x",
+    "node": "5.1.x",
     "npm": "3.x"
   }
 }
