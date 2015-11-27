@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 app.post('/', req => {
   console.log(req.body);
+  res.end();
 });
 
 app.listen(app.get('port'), () => {
