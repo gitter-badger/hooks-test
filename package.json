@@ -20,9 +20,14 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
-    "github-webhook-middleware": "0.0.2"
+    "github-webhook-middleware": "0.0.2",
+    "node-fetch": "^1.3.3"
   },
   "scripts": {
     "start": "node --es_staging --harmony_destructuring --harmony_default_parameters index.js"
+  },
+  "engines": {
+    "node": "5.x",
+    "npm": "3.x"
   }
 }

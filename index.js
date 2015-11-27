@@ -4,7 +4,9 @@ const bodyParser = require('body-parser');
 const githubMiddleware = require('github-webhook-middleware')({
   secret: process.env.GITHUB_SECRET,
 });
-const { FILES_REGEXP } = require('./config');
+const fetch = require('node-fetch');
+const { FILES_REGEXP, REPO } = require('./config');
+const port = process.env.PORT || 5000;
 
 function getChangedFiles(commits, matchRegex) {
   return commits
@@ -17,18 +19,22 @@ function getChangedFiles(commits, matchRegex) {
     .filter((value, i, arr) => arr.indexOf(value) >= i && matchRegex.test(value));
 }
 
-app.set('port', (process.env.PORT || 5000));
+function createGetFilesContentFunction(ref) {
+  return filename => fetch(`/repos/${REPO}/contents/${filename}?ref=${ref}`);
+}
 
 app.use(githubMiddleware);
 app.use(bodyParser.json());
 
-app.post('/', (req, res) => {
-  if (req.headers['x-github-event'] !== 'push') return res.status(200).end();
-  const files = getChangedFiles(req.body.commits, FILES_REGEXP);
-  console.error(files);
+app.post('/', ({ headers, body }, res) => {
+  if (headers['x-github-event'] !== 'push') return res.status(200).end();
+  const { id: ref } = body.head_commit;
+  const getFilesContent = createGetFilesContentFunction(ref);
+  const files = getChangedFiles(body.commits, FILES_REGEXP).map(getFilesContent);
+  Promise.all(files).then(fs => console.log(fs));
   return res.status(200).end();
 });
 
-app.listen(app.get('port'), () => {
-  console.log('Node app is running on port', app.get('port'));
+app.listen(port, () => {
+  console.log('Node app is running on port', port);
 });
