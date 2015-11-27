@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "body-parser": "^1.14.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "github-webhook-middleware": "0.0.2"
   }
 }
