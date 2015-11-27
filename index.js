@@ -22,7 +22,8 @@ function getChangedFiles(commits, matchRegex) {
 function createGetFilesContentFunction(ref) {
   return filename => {
     return fetch(`https://api.github.com/repos/${REPO}/contents/${filename}?ref=${ref}`)
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(({ content, encoding }) => new Buffer(content, encoding).toString());
   };
 }
 
